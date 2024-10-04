@@ -1,0 +1,2132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GamBlitz</title>
+    <!-- Conectar o CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+* {
+	box-sizing: border-box;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+	scroll-behavior: smooth;
+	touch-action: manipulation;
+}
+html,
+body {
+	height: 100%;
+	overflow: hidden;
+}
+
+:root {
+	color-scheme: light dark;
+	--bg-light: #cecece;
+	--bg-dark: #333;
+}
+[data-theme="light"] {
+	color-scheme: light only;
+}
+
+[data-theme="dark"] {
+	color-scheme: dark only;
+}
+body {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	margin: 0;
+	font-family: Poppins;
+}
+body,
+.intro-screen,
+.info-screen {
+	background: linear-gradient(#333, #171a21);
+	background: linear-gradient(
+		196deg,
+		light-dark(var(--bg-light), #3b434a),
+		light-dark(#aaa, #171a21)
+	);
+}
+[data-theme="light"] :is(body, .intro-screen, .info-screen) {
+	background: linear-gradient(196deg, var(--bg-light), #aaa);
+}
+[data-theme="dark"] :is(body, .intro-screen, .info-screen) {
+	background: linear-gradient(196deg, #3b434a, #171a21);
+}
+select,
+input,
+button {
+	font-family: Poppins;
+	border-radius: 6px;
+	padding: 4px 6px;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+header {
+	position: absolute;
+	top: 0;
+	width: 100%;
+	z-index: 200;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+header .logo {
+	text-decoration: none;
+	color: light-dark(var(--bg-dark), var(--bg-light));
+	display: flex;
+	align-items: center;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	cursor: pointer;
+}
+header .logo svg {
+	display: inline-block;
+	width: 42px;
+	height: 42px;
+	fill: light-dark(var(--bg-dark), var(--bg-light));
+	margin-right: -6px;
+}
+
+.mid-header {
+	gap: 12px;
+	display: none;
+	align-items: center;
+}
+@media screen and (max-width: 680px) {
+	.mid-header {
+		position: fixed;
+		top: unset;
+		bottom: 16px;
+		width: 100vw;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		padding: 0 24px;
+	}
+	.mid-header > :nth-child(n + 2) {
+		width: 30%;
+	}
+	.mid-header > :nth-child(-n + 2) {
+		width: 44%;
+		order: 1;
+	}
+	.mid-header > * {
+		width: fit-content;
+	}
+	.mid-header .btn:hover svg {
+		top: 2px;
+	}
+}
+#toggleColorScheme {
+	margin: 12px;
+	width: 24px;
+	height: 24px;
+	filter: grayscale(1);
+	cursor: pointer;
+}
+
+.intro-screen,
+.info-screen {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.intro-screen {
+	z-index: 100;
+}
+.intro-screen h2,
+.info-screen h2 {
+	font-size: 2em;
+	margin-bottom: 0;
+	line-height: 100%;
+	text-shadow: 0 2px 3px #000;
+}
+.intro-screen p {
+	margin-top: 0;
+}
+.intro-screen p,
+.info-screen p {
+	margin-bottom: 2em;
+	padding: 0 16px;
+	text-shadow: 0 2px 3px #000;
+}
+.intro-screen p a {
+	text-decoration: none;
+	color: inherit;
+}
+.intro-screen p a:hover {
+	text-decoration: underline;
+}
+.btn,
+.btn-text,
+.btn svg {
+	transition: all 0.2s ease-in-out;
+}
+.btn {
+	position: relative;
+	border: 1px solid #3333;
+	padding: 4px 16px;
+	border-radius: 4px;
+	background: light-dark(#292929, #bbbbbb);
+	color: light-dark(#fff, #292929);
+	box-shadow: 0 2px 2px 0 #3333, inset 2px 2px 2px 0 #fff3,
+		inset -2px -2px 2px 0 #0003;
+	cursor: pointer;
+	overflow: hidden;
+	white-space: nowrap;
+}
+.btn:hover {
+	border: 1px solid #3335;
+	box-shadow: 0 0 0 0 #3330;
+	translate: 0 2px;
+}
+.btn:hover .btn-text {
+	filter: blur(5px);
+}
+.btn svg {
+	width: 22px;
+	height: 22px;
+	position: absolute;
+	left: 0;
+	right: 0;
+	margin: auto;
+	top: 42px;
+}
+.btn:hover svg {
+	top: 4px;
+}
+.btn svg :is(path, polyline, line) {
+	stroke: light-dark(#fff, #292929);
+	stroke-width: 0.8px;
+	fill: #0000;
+}
+.btn.btn-right svg :is(path, polyline, line) {
+	stroke-width: 2px;
+}
+.btn svg circle {
+	fill: light-dark(#fff, #292929);
+}
+.btn.btn-rotate:hover svg {
+	animation: btn-rotate 1s ease-in-out forwards;
+}
+@keyframes btn-rotate {
+	0% {
+		rotate: 0deg;
+	}
+	100% {
+		rotate: -360deg;
+	}
+}
+.btn.btn-right:hover svg {
+	animation: btn-right 0.4s ease-in-out forwards;
+}
+@keyframes btn-right {
+	0% {
+		left: -124%;
+	}
+	100% {
+		left: 0;
+	}
+}
+
+select {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 4px 16px;
+	font-size: 0.9em;
+	line-height: 142%;
+	color: #333;
+}
+select:focus {
+	outline: none;
+	border-color: #a0bacf;
+	box-shadow: 0 0 5px rgba(191, 201, 209, 0.6);
+}
+
+.info-screen {
+	z-index: 99;
+}
+.info-screen h2 {
+	font-size: 2em;
+	margin-bottom: 0;
+	line-height: 100%;
+}
+.intro-screen > img {
+	position: absolute;
+	opacity: 0.1;
+	width: min(400px, 50vw);
+	pointer-events: none;
+	z-index: -1;
+}
+
+.level-clear {
+	position: absolute;
+	background: light-dark(#fffc, #000c);
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 101;
+}
+.lvl-clear-box {
+	background: light-dark(var(--bg-light), var(--bg-dark));
+	border: 1px solid light-dark(var(--bg-dark), var(--bg-light));
+	box-shadow: 0 4px 12px 0 #0004;
+	color: light-dark(var(--bg-dark), var(--bg-light));
+}
+.lvl-clear-box h2 {
+	padding: 16px;
+	border-bottom: 1px solid light-dark(var(--bg-dark), var(--bg-light));
+	padding-bottom: 12px;
+	margin-top: 0;
+}
+.lvl-clear-box p {
+	line-height: 100%;
+	padding: 0;
+	padding-bottom: 8px;
+	margin: 8px 0;
+}
+.lvl-clear-box span:not(.btn-text) {
+	font-weight: 1000;
+	font-size: 1.2em;
+	margin-right: 12px;
+	display: inline-block;
+	text-align: center;
+}
+
+.lvl-clear-box .next-lvl,
+.lvl-clear-box .same-lvl {
+	background: light-dark(var(--bg-dark), var(--bg-light));
+	color: light-dark(var(--bg-light), var(--bg-dark));
+	width: fit-content;
+	margin: auto;
+	padding: 4px 16px;
+	margin-bottom: 24px;
+	cursor: pointer;
+}
+.lvl-clear-box .same-lvl {
+	scale: 0.8;
+}
+
+#scoreboard-container {
+	display: none;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+	z-index: 102;
+	background-color: #000a;
+}
+#scoreboard-container.show {
+	display: flex;
+}
+.scoreboard {
+	min-width: min(80vw, 242px);
+	max-width: calc(100% - 16px);
+	height: fit-content;
+
+	position: relative;
+	margin: auto;
+	background: light-dark(#fffc, #000c);
+	padding: 0 12px;
+	border: 1px solid light-dark(var(--bg-dark), var(--bg-light));
+	box-shadow: 0 4px 12px 0 #0004;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.scoreboard #close-score {
+	position: absolute;
+	right: 4px;
+	top: 4px;
+	line-height: 100%;
+	cursor: pointer;
+	font-size: 1em;
+}
+.scoreboard #close-score svg {
+	width: 22px;
+}
+.scoreboard #close-score svg * {
+	fill: light-dark(#000c, #fffc);
+}
+.scoreboard #close-score:hover svg * {
+	fill: light-dark(rgba(92, 92, 92, 0.8), rgba(129, 129, 129, 0.8));
+}
+.scoreboard h2 {
+	line-height: 100%;
+	margin: 12px;
+}
+.scoreboard hr {
+	margin: 0;
+}
+.scores {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	max-height: 300px;
+	max-height: min(50vh, 320px);
+	overflow: hidden;
+	margin-bottom: 4px;
+}
+.scoreboard p {
+	text-align: left;
+	line-height: 100%;
+	padding: 0;
+	padding-bottom: 3px;
+	margin: 3px 0 0 0;
+	width: 100px;
+	white-space: nowrap;
+}
+.scoreboard p:not(:last-child) {
+	border-bottom: 1px solid #fff3;
+}
+.scoreboard span {
+	background: light-dark(var(--bg-dark), var(--bg-light));
+	color: light-dark(var(--bg-light), var(--bg-dark));
+	padding: 4px;
+	margin-right: 12px;
+	width: 54px;
+	display: inline-block;
+	text-align: center;
+	font-weight: 800;
+	white-space: nowrap;
+}
+
+#chessboard {
+	--size: min(min(12vw, 10vh), 64px);
+	display: grid;
+	align-items: center;
+	justify-content: center;
+	grid-template-columns: repeat(var(--cols, 8), var(--size));
+	grid-template-rows: repeat(var(--rows, 8), var(--size));
+	gap: 2px;
+	margin-bottom: 20px;
+	position: relative;
+}
+.square {
+	width: var(--size);
+	height: var(--size);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 24px;
+	border: 1px solid light-dark(#0002, #fff3);
+
+	color: transparent;
+
+	position: relative;
+	cursor: grab;
+
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+	transform-style: preserve-3d;
+	transform: rotateY(-90deg);
+	perspective: 200px;
+	animation: flip 0.4s linear forwards;
+}
+
+@keyframes flip {
+	0% {
+		transform: perspective(200px) rotateY(-90deg);
+	}
+	100% {
+		transform: perspective(200px) rotateY(0deg);
+	}
+}
+
+.square[data-piece="wn"]::before {
+	--piece-img: var(--p-wn);
+}
+.square[data-piece="bn"]::before {
+	--piece-img: var(--p-bn);
+}
+.square[data-piece="wb"]::before {
+	--piece-img: var(--p-wb);
+}
+.square[data-piece="bb"]::before {
+	--piece-img: var(--p-bb);
+}
+.square[data-piece="wp"]::before {
+	--piece-img: var(--p-wp);
+}
+.square[data-piece="bp"]::before {
+	--piece-img: var(--p-bp);
+}
+.square[data-piece="wr"]::before {
+	--piece-img: var(--p-wr);
+}
+.square[data-piece="br"]::before {
+	--piece-img: var(--p-br);
+}
+.square[data-piece="wq"]::before {
+	--piece-img: var(--p-wq);
+}
+.square[data-piece="bq"]::before {
+	--piece-img: var(--p-bq);
+}
+.square[data-piece="wk"]::before {
+	--piece-img: var(--p-wk);
+}
+.square[data-piece="bk"]::before {
+	--piece-img: var(--p-bk);
+}
+
+.square[data-piece]::before {
+	content: "";
+	display: block;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-size: cover;
+	pointer-events: none;
+	background-image: var(--piece-img);
+}
+
+.white {
+	background-color: #ffffff;
+}
+
+.black {
+	background-color: #888;
+}
+
+.highlight {
+	background-color: #e0ffbc;
+}
+.black.highlight {
+	background-color: #9ab379;
+}
+
+.selected-piece {
+	border: 3px solid #000;
+}
+
+.gray-out {
+	background-color: transparent;
+	pointer-events: none;
+	border: none;
+	opacity: 0.4;
+}
+
+.target-square {
+	box-shadow: inset 0 0 0 100px #f303;
+	border: 2px solid #f006;
+}
+
+.square.drag-over {
+	border: 2px dashed #000;
+}
+
+.promotion-options {
+	position: absolute;
+	left: 0;
+	right: 0;
+	margin: auto;
+	width: fit-content;
+	z-index: 101;
+	background: #fff;
+	border: 1px solid #000;
+	padding: 12px;
+	border-radius: 4px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	box-shadow: 0 4px 24px 0 #000;
+}
+body:has(.promotion-options) :is(.square, .mid-header) {
+	pointer-events: none;
+}
+.promotion-options button {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	background: #fff;
+	color: #000;
+	border: 1px solid #0003;
+	box-shadow: 0 2px 3px 0 #0003;
+	transition: all 0.2s ease-in-out;
+}
+.promotion-options button::before {
+	content: "";
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	margin: 2px 6px 2px 0px;
+	--piece-img: var(--p-bq);
+	background-image: var(--piece-img);
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+.promotion-options button:nth-child(2):before {
+	--piece-img: var(--p-bn);
+}
+.promotion-options button:hover {
+	background: #0003;
+	translate: 0 2px;
+	box-shadow: 0 0px 1px 0 #0003;
+}
+
+/* animation for the theme toggle icon */
+#eSe95CNaULV2_to,
+#eSe95CNaULV3_to,
+#eSe95CNaULV4_to {
+	transition: transform 0.4s ease-in-out;
+}
+#eSe95CNaULV2,
+#eSe95CNaULV3,
+#eSe95CNaULV4 {
+	transition: opacity 0.4s ease-in-out;
+}
+[data-theme="light"] {
+	#eSe95CNaULV2_to {
+		transform: translate(11.903978px, 8.047313px);
+	}
+	#eSe95CNaULV3_to {
+		transform: translate(12px, 21px);
+	}
+	#eSe95CNaULV4_to {
+		transform: translate(12px, 8.976526px);
+	}
+	#eSe95CNaULV2 {
+		opacity: 0;
+	}
+	#eSe95CNaULV4 {
+		opacity: 1;
+	}
+}
+@media (prefers-color-scheme: light) {
+	#eSe95CNaULV2_to {
+		transform: translate(11.903978px, 8.047313px);
+	}
+	#eSe95CNaULV3_to {
+		transform: translate(12px, 21px);
+	}
+	#eSe95CNaULV4_to {
+		transform: translate(12px, 8.976526px);
+	}
+	#eSe95CNaULV2 {
+		opacity: 0;
+	}
+	#eSe95CNaULV4 {
+		opacity: 1;
+	}
+}
+[data-theme="dark"] {
+	#eSe95CNaULV2_to {
+		transform: translate(11.999345px, 10.000438px);
+	}
+	#eSe95CNaULV3_to {
+		transform: translate(12px, 18px);
+	}
+	#eSe95CNaULV4_to {
+		transform: translate(12px, 11.164719px);
+	}
+	#eSe95CNaULV2 {
+		opacity: 1;
+	}
+	#eSe95CNaULV4 {
+		opacity: 0;
+	}
+}
+@media (prefers-color-scheme: dark) {
+	#eSe95CNaULV2_to {
+		transform: translate(11.999345px, 10.000438px);
+	}
+	#eSe95CNaULV3_to {
+		transform: translate(12px, 18px);
+	}
+	#eSe95CNaULV4_to {
+		transform: translate(12px, 11.164719px);
+	}
+	#eSe95CNaULV2 {
+		opacity: 1;
+	}
+	#eSe95CNaULV4 {
+		opacity: 0;
+	}
+}
+footer {
+	position: absolute;
+	bottom: 0;
+	color: #fff0;
+	opacity: 0;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.hero-bg-pawn {
+	position: absolute;
+	width: 140px;
+	height: 280px;
+	filter: blur(0.3px);
+	opacity: 0.4;
+	z-index: -1;
+	scale: 1.2;
+	transition: all 0.2s ease-in-out;
+}
+.hero-bg-pawn > div {
+	position: absolute;
+	left: 0;
+	right: 0;
+	margin: auto;
+	border-radius: 100%;
+	--scale: 10px;
+	box-shadow: inset calc(0.8 * var(--scale)) 0px calc(0.4 * var(--scale))
+			calc(-0.4 * var(--scale)) #457c9b,
+		inset calc(1.2 * var(--scale)) 0px calc(1.4 * var(--scale))
+			calc(-0.4 * var(--scale)) #345c72,
+		inset calc(-1.4 * var(--scale)) calc(-2 * var(--scale))
+			calc(1.2 * var(--scale)) calc(-2 * var(--scale)) #fff5,
+		inset calc(-1.4 * var(--scale)) var(--scale) calc(1.2 * var(--scale))
+			calc(-0.8 * var(--scale)) #fff,
+		inset calc(-1.4 * var(--scale)) var(--scale) calc(2 * var(--scale))
+			calc(-0.6 * var(--scale)) #fff,
+		inset 0px 0px 0px 100px #000;
+}
+.hero-bg-pawn > div:nth-child(1) {
+	width: 74px;
+	height: 74px;
+	top: 6%;
+}
+.hero-bg-pawn > div:nth-child(5) {
+	width: 54px;
+	height: 12px;
+	top: 30%;
+	--scale: 3px;
+}
+.hero-bg-pawn > div:nth-child(6) {
+	width: 64px;
+	height: 20px;
+	top: 33%;
+	--scale: 4.5px;
+	border-radius: 100% 100% 100% 100% / 80% 80% 80% 80%;
+}
+.hero-bg-pawn > div:nth-child(7) {
+	width: 44px;
+	height: 112px;
+	top: 27%;
+	--scale: 8px;
+	transform-style: preserve-3d;
+	transform: perspective(100px) rotateX(45deg);
+	border-radius: 100% 100% 100% 100% / 20% 20% 10% 10%;
+}
+.hero-bg-pawn > div:nth-child(4) {
+	width: 92px;
+	height: 20px;
+	top: 67%;
+	--scale: 6px;
+	border-radius: 100% 100% 100% 100% / 80% 80% 80% 80%;
+}
+.hero-bg-pawn > div:nth-child(3) {
+	width: 90%;
+	height: 64px;
+	top: 70%;
+	--scale: 10px;
+	border-radius: 100% 100% 100% 100% / 200% 200% 70% 70%;
+}
+.hero-bg-pawn > div:nth-child(2) {
+	width: 100%;
+	height: 42px;
+	top: 86%;
+	--scale: 8px;
+	border-radius: 100% 100% 100% 100% / 50% 50% 50% 50%;
+}
+.intro-screen:has(.intro-screen-btn.btn:hover) .hero-bg-pawn {
+	filter: blur(10px);
+	transform: perspective(200px) rotateX(4deg) scale(1.2);
+}
+    </style>
+<header></header>
+	<div class="logo" onclick="document.querySelector('.intro-screen').style.display = 'flex'; document.querySelector('.info-screen').style.display = 'flex'; document.querySelector('.mid-header').style.display = 'none';">
+		<svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 48 48">
+			<path d="M32.1 21.57v11.34H15.9v-2.36a4.06 4.06 0 0 1 2.24-3.62L21 25.48a2.43 2.43 0 0 0 1.34-2.17v-2.55l-1.12.56a1.23 1.23 0 0 0-.64.79l-.58 2.4a.65.65 0 0 1-.37.42l-1.5.59a.59.59 0 0 1-.47 0l-3.05-1.36a.6.6 0 0 1-.36-.55v-8a1.22 1.22 0 0 1 .36-.86l.45-.45-.72-1.44a.85.85 0 0 1-.09-.38.61.61 0 0 1 .61-.61h7.49a9.72 9.72 0 0 1 9.75 9.7Zm1 12.15H14.89a.61.61 0 0 0-.61.61v1.21a.61.61 0 0 0 .61.61h18.22a.61.61 0 0 0 .61-.61v-1.21a.61.61 0 0 0-.61-.61Zm-16.2-17a1 1 0 1 0 1 1 1 1 0 0 0-.99-1.01Z" />
+		</svg>
+		GamBlitz
+	</div>
+
+	<div class="mid-header">
+		<select id="styleDropdown">
+			<option value="" disabled selected>Art Style</option>
+		</select>
+		<select id="levelDropdown">
+			<option value="" disabled selected>Level Select</option>
+		</select>
+		<button id="resetButton" class="btn btn-rotate">
+			<span class="btn-text">Reset Level</span>
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
+				<g fill="#212121" class="nc-icon-wrapper">
+					<polyline points="1.872 3.305 2.28 6.25 5.224 5.843" fill="none" stroke="#212121" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+					</polyline>
+					<path d="M16.232,8.484c-.265-3.763-3.401-6.734-7.232-6.734-3.031,0-5.627,1.86-6.71,4.5" fill="none" stroke="#212121" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+					</path>
+					<circle cx="14.127" cy="14.127" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+					</circle>
+					<circle cx="9" cy="16.25" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+					</circle>
+					<circle cx="3.873" cy="14.127" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+					</circle>
+					<circle cx="1.75" cy="9" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+					</circle>
+					<circle cx="15.698" cy="11.774" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+					</circle>
+					<circle cx="11.774" cy="15.698" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+					</circle>
+					<circle cx="6.226" cy="15.698" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+					</circle>
+					<circle cx="2.302" cy="11.774" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+					</circle>
+				</g>
+			</svg>
+		</button>
+		<div id="moveCount">Moves: 0</div>
+		<button id="scoreboardButton" class="btn">
+			<span class="btn-text">Scores</span>
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
+				<g fill="#212121" class="nc-icon-wrapper">
+					<path d="M4.743,2.492l-.946-.315-.316-.947c-.102-.306-.609-.306-.711,0l-.316,.947-.946,.315c-.153,.051-.257,.194-.257,.356s.104,.305,.257,.356l.946,.315,.316,.947c.051,.153,.194,.256,.355,.256s.305-.104,.355-.256l.316-.947,.946-.315c.153-.051,.257-.194,.257-.356s-.104-.305-.257-.356Z" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+					</path>
+					<polyline points="13.469 9.728 16.25 7.017 11.24 6.29 9 1.75 6.76 6.29 1.75 7.017 5.375 10.551 4.519 15.54 8.864 13.256" fill="none" stroke="#212121" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+					</polyline>
+					<path d="M15.158,13.49l-1.263-.421-.421-1.263c-.137-.408-.812-.408-.949,0l-.421,1.263-1.263,.421c-.204,.068-.342,.259-.342,.474s.138,.406,.342,.474l1.263,.421,.421,1.263c.068,.204,.26,.342,.475,.342s.406-.138,.475-.342l.421-1.263,1.263-.421c.204-.068,.342-.259,.342-.474s-.138-.406-.342-.474Z" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+					</path>
+					<circle cx="14.25" cy="3.25" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+					</circle>
+				</g>
+			</svg>
+		</button>
+	</div>
+
+	<div id="toggleColorScheme">
+		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="eSe95CNaULV1" viewBox="0 0 24 24" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
+			<g id="eSe95CNaULV2_to" transform="translate(11.999345,10.000438)">
+				<path id="eSe95CNaULV2" d="M16.68,17c0,0-9.25,0-9.25,0-.239112-.000048-.470341-.085517-.652-.241-2.184208-1.890543-3.186458-4.807439-2.625533-7.641214s2.598813-5.148898,5.338533-6.064786c.330767-.111191.695574-.041917.962558.182783s.397526.572322.344442.917217c-.058738.346067-.091496.696044-.098,1.047.006067,3.342711,2.717284,6.049454,6.06,6.05.653027.000018,1.301636-.10707,1.92-.317.333579-.112384.701678-.041108.969198.187668s.395057.581354.335802.928332c-.314451,1.827522-1.250583,3.490304-2.65,4.707-.182014.157239-.414473.243835-.655.244Z" transform="translate(-11.999345,-10.000438)" fill="#b2b1ff" />
+			</g>
+			<g id="eSe95CNaULV3_to" transform="translate(12,18)">
+				<path id="eSe95CNaULV3" d="M11,21h-3c-.552285,0-1-.447715-1-1s.447715-1,1-1h3c.552285,0,1,.447715,1,1s-.447715,1-1,1Zm5,0h-1c-.552285,0-1-.447715-1-1s.447715-1,1-1h1c.552285,0,1,.447715,1,1s-.447715,1-1,1Zm4-4h-16c-.552285,0-1-.447715-1-1s.447715-1,1-1h16c.552285,0,1,.447715,1,1s-.447715,1-1,1Z" transform="translate(-12,-18)" fill="#6563ff" />
+			</g>
+			<g id="eSe95CNaULV4_to" transform="translate(12,11.164719)">
+				<ellipse id="eSe95CNaULV4" rx="8.453819" ry="8.453819" transform="scale(0.932473,0.932471) translate(0,0)" opacity="0" fill="#6563ff" stroke-width="0" />
+			</g>
+		</svg>
+	</div>
+</header>
+
+<div id="scoreboard-container"></div>
+
+<div class="intro-screen">
+	<div class="hero-bg-pawn">
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+	</div>
+	<h2>GamBlitz</h2>
+	<p>made by <a href="https://codepen.io/RAFA3L" target="_blank" rel="noopener noreferrer">Rafa</a></p>
+	<div class="intro-screen-btn btn">
+		<span class="btn-text">Get Started</span>
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
+			<g fill="#fff" class="nc-icon-wrapper">
+				<path d="M14.75 8.25C15.122 8.25 15.466 8.368 15.75 8.567V6.25C15.75 5.146 14.855 4.25 13.75 4.25H11.433C11.631 3.966 11.75 3.623 11.75 3.25C11.75 2.283 10.966 1.5 10 1.5C9.034 1.5 8.25 2.283 8.25 3.25C8.25 3.623 8.368 3.966 8.567 4.25H6.25C5.145 4.25 4.25 5.146 4.25 6.25V8.567C3.966 8.369 3.622 8.25 3.25 8.25C2.284 8.25 1.5 9.033 1.5 10C1.5 10.967 2.284 11.75 3.25 11.75C3.622 11.75 3.966 11.632 4.25 11.433V13.75C4.25 14.854 5.145 15.75 6.25 15.75H8.567C8.369 15.466 8.25 15.123 8.25 14.75C8.25 13.783 9.034 13 10 13C10.966 13 11.75 13.783 11.75 14.75C11.75 15.123 11.632 15.466 11.433 15.75H13.75C14.855 15.75 15.75 14.854 15.75 13.75V11.433C15.466 11.631 15.122 11.75 14.75 11.75C13.784 11.75 13 10.967 13 10C13 9.033 13.784 8.25 14.75 8.25Z" fill="#212121" fill-opacity="0.3" data-color="color-2" data-stroke="none" stroke="none"></path>
+				<path d="M14.75 8.25C15.122 8.25 15.466 8.368 15.75 8.567V6.25C15.75 5.146 14.855 4.25 13.75 4.25H11.433C11.631 3.966 11.75 3.623 11.75 3.25C11.75 2.283 10.966 1.5 10 1.5C9.034 1.5 8.25 2.283 8.25 3.25C8.25 3.623 8.368 3.966 8.567 4.25H6.25C5.145 4.25 4.25 5.146 4.25 6.25V8.567C3.966 8.369 3.622 8.25 3.25 8.25C2.284 8.25 1.5 9.033 1.5 10C1.5 10.967 2.284 11.75 3.25 11.75C3.622 11.75 3.966 11.632 4.25 11.433V13.75C4.25 14.854 5.145 15.75 6.25 15.75H8.567C8.369 15.466 8.25 15.123 8.25 14.75C8.25 13.783 9.034 13 10 13C10.966 13 11.75 13.783 11.75 14.75C11.75 15.123 11.632 15.466 11.433 15.75H13.75C14.855 15.75 15.75 14.854 15.75 13.75V11.433C15.466 11.631 15.122 11.75 14.75 11.75C13.784 11.75 13 10.967 13 10C13 9.033 13.784 8.25 14.75 8.25Z" stroke="#212121" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+			</g>
+		</svg>
+	</div>
+</div>
+
+<div class="info-screen">
+	<h2>Rules</h2>
+	<p>GamBlitz is a chess puzzle game.
+		<br>Move the black piece to the red target square using standard chess moves.
+		<br>Black pawns promote at the top row.
+		<br>No captures. Minimize your moves.
+	</p>
+	<div class="info-screen-btn btn">
+		<span class="btn-text">Play Level 1</span>
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
+			<g fill="#fff" class="nc-icon-wrapper">
+				<path d="M14.75 8.25C15.122 8.25 15.466 8.368 15.75 8.567V6.25C15.75 5.146 14.855 4.25 13.75 4.25H11.433C11.631 3.966 11.75 3.623 11.75 3.25C11.75 2.283 10.966 1.5 10 1.5C9.034 1.5 8.25 2.283 8.25 3.25C8.25 3.623 8.368 3.966 8.567 4.25H6.25C5.145 4.25 4.25 5.146 4.25 6.25V8.567C3.966 8.369 3.622 8.25 3.25 8.25C2.284 8.25 1.5 9.033 1.5 10C1.5 10.967 2.284 11.75 3.25 11.75C3.622 11.75 3.966 11.632 4.25 11.433V13.75C4.25 14.854 5.145 15.75 6.25 15.75H8.567C8.369 15.466 8.25 15.123 8.25 14.75C8.25 13.783 9.034 13 10 13C10.966 13 11.75 13.783 11.75 14.75C11.75 15.123 11.632 15.466 11.433 15.75H13.75C14.855 15.75 15.75 14.854 15.75 13.75V11.433C15.466 11.631 15.122 11.75 14.75 11.75C13.784 11.75 13 10.967 13 10C13 9.033 13.784 8.25 14.75 8.25Z" fill="#212121" fill-opacity="0.3" data-color="color-2" data-stroke="none" stroke="none"></path>
+				<path d="M14.75 8.25C15.122 8.25 15.466 8.368 15.75 8.567V6.25C15.75 5.146 14.855 4.25 13.75 4.25H11.433C11.631 3.966 11.75 3.623 11.75 3.25C11.75 2.283 10.966 1.5 10 1.5C9.034 1.5 8.25 2.283 8.25 3.25C8.25 3.623 8.368 3.966 8.567 4.25H6.25C5.145 4.25 4.25 5.146 4.25 6.25V8.567C3.966 8.369 3.622 8.25 3.25 8.25C2.284 8.25 1.5 9.033 1.5 10C1.5 10.967 2.284 11.75 3.25 11.75C3.622 11.75 3.966 11.632 4.25 11.433V13.75C4.25 14.854 5.145 15.75 6.25 15.75H8.567C8.369 15.466 8.25 15.123 8.25 14.75C8.25 13.783 9.034 13 10 13C10.966 13 11.75 13.783 11.75 14.75C11.75 15.123 11.632 15.466 11.433 15.75H13.75C14.855 15.75 15.75 14.854 15.75 13.75V11.433C15.466 11.631 15.122 11.75 14.75 11.75C13.784 11.75 13 10.967 13 10C13 9.033 13.784 8.25 14.75 8.25Z" stroke="#212121" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+			</g>
+		</svg>
+	</div>
+</div>
+
+<div class="puzzle-screen">
+	<div id="chessboard"></div>
+</div>
+
+<script>
+	const style = document.createElement('style');
+	let css = '';
+	for (let i = 0; i < 64; i++) {
+		const delay = ((i + 1) * 0.06).toFixed(2);
+		css += `.square:nth-child(${i + 1}) { animation-delay: ${delay}s; }`;
+	}
+	style.innerHTML = css;
+	document.head.appendChild(style);
+    const levels = [
+	{
+		start: "c1",
+		goal: "c5",
+		board: [
+			"a1wr",
+			"a2",
+			"a3",
+			"a4",
+			"a5wq",
+			"b1",
+			"b2wp",
+			"b3",
+			"b4wp",
+			"b5",
+			"c1bp",
+			"c2wr",
+			"c3wn",
+			"c4wb",
+			"c5",
+			"d1",
+			"d2wp",
+			"d3",
+			"d4wp",
+			"d5",
+			"e1wr",
+			"e2",
+			"e3",
+			"e4",
+			"e5wk"
+		],
+		boardsize: "5x5",
+		promotion: []
+	},
+	{
+		start: "a1",
+		goal: "b1",
+		board: [
+			"a1bp",
+			"a2wk",
+			"a3wn",
+			"a4wb",
+			"a5wn",
+			"b1",
+			"b2wb",
+			"b3wk",
+			"b4wp",
+			"b5wp"
+		],
+		boardsize: "2x5",
+		promotion: ["a5"]
+	},
+	{
+		start: "a4",
+		goal: "d1",
+		board: [
+			"a2wb",
+			"a3wr",
+			"a4bk",
+			"b2wb",
+			"b3wr",
+			"b4wn",
+			"c2wb",
+			"c3wr",
+			"c4wn",
+			"d1",
+			"d2wb",
+			"d3wr",
+			"d4wn"
+		],
+		boardsize: "4x4",
+		promotion: []
+	},
+	{
+		start: "a2",
+		goal: "c2",
+		board: [
+			"a1wn",
+			"a2bp",
+			"a3wn",
+			"a4wn",
+			"b1wb",
+			"b2wb",
+			"b3wb",
+			"c2",
+			"c3wn",
+			"c4wn"
+		],
+		boardsize: "3x4",
+		promotion: ["a4"]
+	},
+	{
+		start: "b1",
+		goal: "c1",
+		board: [
+			"a2wb",
+			"a3wp",
+			"a4wb",
+			"a5wp",
+			"b1bp",
+			"b2wk",
+			"b3wn",
+			"b4wn",
+			"b5wb",
+			"c1",
+			"c2wb",
+			"c3wp",
+			"c4wb",
+			"c5wp"
+		],
+		boardsize: "3x5",
+		promotion: ["b5"]
+	},
+	{
+		start: "a1",
+		goal: "c1",
+		board: [
+			"a1bp",
+			"a2wr",
+			"a3wn",
+			"a4wr",
+			"a5wn",
+			"b1wp",
+			"b2wn",
+			"b3wp",
+			"b4wn",
+			"b5wp",
+			"c1",
+			"c2wr",
+			"c3wn",
+			"c4wr",
+			"c5wn"
+		],
+		boardsize: "3x5",
+		promotion: ["a5"]
+	},
+	{
+		start: "a1",
+		goal: "e1",
+		board: [
+			"a1bp",
+			"a2wb",
+			"a3wb",
+			"b1wn",
+			"b2wr",
+			"b3wr",
+			"c2wp",
+			"c3wp",
+			"d2wb",
+			"d3wn",
+			"e1",
+			"e2wp",
+			"e3wb",
+			"f2wn",
+			"f3wp"
+		],
+		boardsize: "6x3",
+		promotion: ["a3"]
+	},
+	{
+		start: "a1",
+		goal: "e1",
+		board: [
+			"a1bp",
+			"a2wb",
+			"a3wb",
+			"b2wb",
+			"b3wn",
+			"c2wn",
+			"c3wp",
+			"d2wr",
+			"d3wn",
+			"e1",
+			"e2wr",
+			"e3wp"
+		],
+		boardsize: "5x3",
+		promotion: ["a3"]
+	},
+	{
+		start: "a1",
+		goal: "d3",
+		board: [
+			"a1bp",
+			"a2wn",
+			"a3wn",
+			"a4wn",
+			"a5wn",
+			"b1wr",
+			"b2wp",
+			"b3wp",
+			"b4wp",
+			"b5wp",
+			"c1wn",
+			"c2wp",
+			"c3wn",
+			"c4wp",
+			"c5wp",
+			"d3"
+		],
+		boardsize: "4x5",
+		promotion: ["a5"]
+	},
+	{
+		start: "a2",
+		goal: "f2",
+		board: [
+			"a2bn",
+			"b1wb",
+			"b2wp",
+			"b3wb",
+			"c1wp",
+			"c2wb",
+			"c3wp",
+			"d1wn",
+			"d2wp",
+			"d3wn",
+			"e1wp",
+			"e2wn",
+			"e3wp",
+			"f2"
+		],
+		boardsize: "6x3",
+		promotion: []
+	},
+	{
+		start: "a1",
+		goal: "d1",
+		board: [
+			"a1bn",
+			"a2wb",
+			"a3wq",
+			"b1wk",
+			"b2wp",
+			"b3wn",
+			"c2wb",
+			"c3wp",
+			"d1",
+			"d2wr",
+			"d3wb"
+		],
+		boardsize: "4x3",
+		promotion: []
+	},
+	{
+		start: "a3",
+		goal: "f1",
+		board: [
+			"a3bn",
+			"a2wn",
+			"b2wn",
+			"b3wb",
+			"c2wn",
+			"c3wb",
+			"d2wn",
+			"d3wb",
+			"e1wr",
+			"e2wr",
+			"e3wb",
+			"f1",
+			"f2wr",
+			"f3wr"
+		],
+		boardsize: "6x3",
+		promotion: []
+	},
+	{
+		start: "d1",
+		goal: "a1",
+		board: [
+			"a1",
+			"a2wr",
+			"a3wb",
+			"a4wn",
+			"b2wr",
+			"b3wb",
+			"b4wn",
+			"c2wr",
+			"c3wb",
+			"c4wn",
+			"d1bp",
+			"d2wr",
+			"d3wb",
+			"d4wn"
+		],
+		boardsize: "4x4",
+		promotion: ["d4"]
+	},
+	{
+		start: "b2",
+		goal: "b1",
+		board: [
+			"a3wn",
+			"a4wn",
+			"a5wb",
+			"b1",
+			"b2bp",
+			"b3wr",
+			"b4wb",
+			"b5wb",
+			"c3wn",
+			"c4wn",
+			"c5wb"
+		],
+		boardsize: "3x5",
+		promotion: ["b5"]
+	},
+	{
+		start: "a1",
+		goal: "d3",
+		board: [
+			"a1br",
+			"a2wn",
+			"a3wb",
+			"b1wn",
+			"b2wr",
+			"b3wp",
+			"c1wn",
+			"c2wn",
+			"c3wb",
+			"d3"
+		],
+		boardsize: "4x3",
+		promotion: []
+	},
+	{
+		start: "b1",
+		goal: "b5",
+		board: [
+			"a2wn",
+			"a3wn",
+			"a4wb",
+			"b1bb",
+			"b2wp",
+			"b3wp",
+			"b4wn",
+			"b5",
+			"c2wn",
+			"c3wn",
+			"c4wb"
+		],
+		boardsize: "3x5",
+		promotion: []
+	},
+	{
+		start: "b1",
+		goal: "b5",
+		board: [
+			"a2wn",
+			"a3wn",
+			"a4wp",
+			"b1bb",
+			"b2wp",
+			"b3wb",
+			"b4wn",
+			"b5",
+			"c2wn",
+			"c3wn",
+			"c4wp"
+		],
+		boardsize: "3x5",
+		promotion: []
+	},
+	{
+		start: "a1",
+		goal: "c1",
+		board: [
+			"a1bp",
+			"a2wn",
+			"a3wn",
+			"a4wn",
+			"a5wn",
+			"a6wn",
+			"b2wb",
+			"b3wp",
+			"b4wn",
+			"b5wp",
+			"b6wp",
+			"c1",
+			"c2wn",
+			"c3wn",
+			"c4wn",
+			"c5wn",
+			"c6wn"
+		],
+		boardsize: "3x6",
+		promotion: ["a6"]
+	},
+	{
+		start: "b1",
+		goal: "d1",
+		board: [
+			"a3wn",
+			"a4wp",
+			"a5wn",
+			"b1bp",
+			"b2wn",
+			"b3wn",
+			"b4wr",
+			"b5wn",
+			"b6wn",
+			"c2wp",
+			"c3wp",
+			"c4wn",
+			"c5wp",
+			"c6wp",
+			"d1",
+			"d2wn",
+			"d3wp",
+			"d4wn",
+			"d5wp",
+			"d6wn",
+			"e3wn",
+			"e4wp",
+			"e5wn"
+		],
+		boardsize: "5x6",
+		promotion: ["b6"]
+	},
+	{
+		start: "b1",
+		goal: "c1",
+		board: [
+			"a2wr",
+			"a3wp",
+			"a4wp",
+			"a5wr",
+			"b1bp",
+			"b2wn",
+			"b3wn",
+			"b4wb",
+			"b5wb",
+			"c1",
+			"c2wb",
+			"c3wp",
+			"c4wp",
+			"c5wp"
+		],
+		boardsize: "3x5",
+		promotion: ["b5"]
+	}
+];
+
+let currentLevel = 0;
+let moveCount = 0;
+let mainPiece = {};
+let goalPosition = "";
+let selectedPiece = null;
+let boardConfig = [];
+let promotionSquares = [];
+
+document.querySelector(".intro-screen-btn").addEventListener("click", () => {
+	document.querySelector(".intro-screen").style.display = "none";
+});
+document.querySelector(".info-screen-btn").addEventListener("click", () => {
+	document.querySelector(".info-screen").style.display = "none";
+	document.querySelector(".mid-header").style.display = "flex";
+	currentLevel = getHighestUnlockedLevel();
+	loadLevel(levels[currentLevel]);
+});
+
+function getHighestUnlockedLevel() {
+	let highestLevel = 0;
+	let allLevelsCleared = true;
+	for (let level in scoreboard) {
+		if (scoreboard[level] !== "--") {
+			highestLevel = Math.max(highestLevel, parseInt(level));
+		} else {
+			allLevelsCleared = false;
+		}
+	}
+	return allLevelsCleared ? 0 : highestLevel;
+}
+
+let scoreboard = {};
+levels.forEach((level, index) => {
+	scoreboard[index + 1] = "--";
+});
+
+function loadScores() {
+	const savedScores = localStorage.getItem("chessScoreboard");
+	if (savedScores) {
+		scoreboard = JSON.parse(savedScores);
+	}
+}
+
+function loadSelectedArtStyle() {
+	const savedStyle = localStorage.getItem("selectedArtStyle");
+	if (savedStyle) {
+		updatePieceStyles(savedStyle);
+		document.getElementById("styleDropdown").value = savedStyle;
+		const styleDropdown = document.getElementById("styleDropdown");
+		if (styleDropdown) {
+			styleDropdown.value = savedStyle;
+		}
+	} else {
+		updatePieceStyles(styles[0]);
+	}
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+	loadScores();
+	const highestUnlockedLevel = getHighestUnlockedLevel();
+	document.querySelector(
+		".info-screen-btn .btn-text"
+	).textContent = `Play Level ${highestUnlockedLevel + 1}`;
+
+	const chessboard = document.getElementById("chessboard");
+	drawBoard(chessboard);
+	loadLevel(levels[currentLevel]);
+
+	document.getElementById("resetButton").addEventListener("click", () => {
+		loadLevel(levels[currentLevel]);
+	});
+
+	const levelDropdown = document.getElementById("levelDropdown");
+	levels.forEach((level, index) => {
+		const option = document.createElement("option");
+		option.value = index;
+		option.textContent = `Level ${index + 1}`;
+		levelDropdown.appendChild(option);
+
+		if (index > 0 && scoreboard[index] === "--") {
+			option.disabled = true;
+		}
+	});
+
+	levelDropdown.addEventListener("change", () => {
+		currentLevel = parseInt(levelDropdown.value);
+		loadLevel(levels[currentLevel]);
+	});
+});
+
+function drawBoard(boardElement, rows, cols) {
+	boardElement.innerHTML = "";
+	document.documentElement.style.setProperty("--rows", rows);
+	document.documentElement.style.setProperty("--cols", cols);
+
+	const columns = "ABCDEFGH";
+	for (let row = rows; row >= 1; row--) {
+		for (let col = 0; col < cols; col++) {
+			const square = document.createElement("div");
+			square.classList.add("square", (row + col) % 2 === 0 ? "white" : "black");
+			square.id = `${columns[col].toLowerCase()}${row}`;
+			boardElement.appendChild(square);
+
+			square.addEventListener("dragover", (e) => {
+				e.preventDefault();
+				square.classList.add("drag-over");
+			});
+			square.addEventListener("dragleave", () => {
+				square.classList.remove("drag-over");
+			});
+			square.addEventListener("drop", (e) => {
+				e.preventDefault();
+				square.classList.remove("drag-over");
+				if (
+					selectedPiece &&
+					boardConfig.includes(square.id) &&
+					!square.dataset.piece
+				) {
+					movePiece(square.id);
+				}
+			});
+
+			square.addEventListener("click", () => {
+				if (
+					selectedPiece &&
+					boardConfig.includes(square.id) &&
+					!square.dataset.piece
+				) {
+					movePiece(square.id);
+				}
+			});
+		}
+	}
+}
+
+function loadLevel(level) {
+	moveCount = 0;
+	updateMoveCountDisplay();
+	clearBoard();
+
+	document.getElementById("levelDropdown").value = currentLevel;
+
+	const [cols, rows] = level.boardsize.split("x").map(Number);
+	drawBoard(document.getElementById("chessboard"), rows, cols);
+
+	grayOutUnusedSquares(level);
+	mainPiece = {
+		position: level.start,
+		piece: getPiece(level.start, level.board)
+	};
+	goalPosition = level.goal;
+	promotionSquares = level.promotion;
+	selectedPiece = null;
+	boardConfig = [
+		level.start,
+		level.goal,
+		...level.board.map((item) => item.slice(0, 2))
+	];
+	level.board.forEach((item) => {
+		const position = item.slice(0, 2);
+		const piece = getPiece(position, level.board);
+		placePiece(position, piece);
+	});
+	placePiece(level.start, mainPiece.piece, true);
+
+	const goalSquare = document.getElementById(goalPosition);
+	if (goalSquare) {
+		goalSquare.classList.add("target-square");
+	}
+}
+
+function clearBoard() {
+	document.querySelectorAll(".square").forEach((square) => {
+		square.textContent = "";
+		square.classList.remove(
+			"highlight",
+			"selected-piece",
+			"gray-out",
+			"target-square"
+		);
+		delete square.dataset.piece;
+		delete square.dataset.main;
+	});
+}
+
+function grayOutUnusedSquares(level) {
+	const usedSquares = [
+		level.start,
+		level.goal,
+		...level.board.map((item) => item.slice(0, 2))
+	];
+	document.querySelectorAll(".square").forEach((square) => {
+		if (!usedSquares.includes(square.id)) {
+			square.classList.add("gray-out");
+		}
+	});
+}
+
+function updateMoveCountDisplay() {
+	document.getElementById("moveCount").textContent = `Moves: ${moveCount}`;
+}
+
+function getPiece(position, board) {
+	const piece = board.find((item) => item.startsWith(position));
+	if (piece) {
+		return piece.slice(2);
+	}
+	return "";
+}
+
+function placePiece(position, piece, isMain = false) {
+	const square = document.getElementById(position);
+	if (square) {
+		square.textContent = piece[1];
+		square.dataset.piece = piece;
+		square.draggable = true;
+		if (isMain) {
+			square.dataset.main = "true";
+		}
+		square.addEventListener("click", (e) => {
+			e.stopPropagation();
+			if (boardConfig.includes(position) && square.dataset.piece) {
+				selectPiece(position, piece);
+			}
+		});
+		square.addEventListener("dragstart", (e) => {
+			if (boardConfig.includes(position) && square.dataset.piece) {
+				e.dataTransfer.setData("text/plain", position);
+				selectPiece(position, piece);
+			}
+		});
+
+		square.addEventListener("touchstart", handleTouchStart, { passive: true });
+		square.addEventListener("touchmove", handleTouchMove, { passive: false });
+		square.addEventListener("touchend", handleTouchEnd, { passive: true });
+	}
+}
+
+let touchStartX = 0;
+let touchStartY = 0;
+let touchPiece = null;
+
+function handleTouchStart(e) {
+	const touch = e.touches[0];
+	touchStartX = touch.clientX;
+	touchStartY = touch.clientY;
+	touchPiece = e.target;
+	selectPiece(touchPiece.id, touchPiece.dataset.piece);
+}
+
+function handleTouchMove(e) {
+	e.preventDefault();
+	const touch = e.touches[0];
+	const touchX = touch.clientX;
+	const touchY = touch.clientY;
+	const elem = document.elementFromPoint(touchX, touchY);
+
+	if (
+		elem &&
+		elem.classList.contains("square") &&
+		boardConfig.includes(elem.id) &&
+		!elem.dataset.piece
+	) {
+		document
+			.querySelectorAll(".square.drag-over")
+			.forEach((square) => square.classList.remove("drag-over"));
+		elem.classList.add("drag-over");
+	}
+}
+
+function handleTouchEnd(e) {
+	const touch = e.changedTouches[0];
+	const touchX = touch.clientX;
+	const touchY = touch.clientY;
+	const elem = document.elementFromPoint(touchX, touchY);
+
+	if (
+		elem &&
+		elem.classList.contains("square") &&
+		boardConfig.includes(elem.id) &&
+		!elem.dataset.piece
+	) {
+		movePiece(elem.id);
+	}
+
+	document
+		.querySelectorAll(".square.drag-over")
+		.forEach((square) => square.classList.remove("drag-over"));
+	touchPiece = null;
+}
+
+function movePiece(position) {
+	if (selectedPiece) {
+		const validMoves = getValidMoves(selectedPiece.position, selectedPiece.piece);
+		if (validMoves.includes(position)) {
+			if (promotionSquares.includes(position) && selectedPiece.piece[1] === "p") {
+				showPromotionOptions(
+					position,
+					selectedPiece.piece[0],
+					selectedPiece.position
+				);
+			} else {
+				placePiece(position, selectedPiece.piece, selectedPiece.isMain);
+				clearSquare(selectedPiece.position);
+				moveCount++;
+				updateMoveCountDisplay();
+				if (selectedPiece.isMain && position === goalPosition) {
+					updateScoreboard(currentLevel + 1, moveCount);
+					showLevelClearPopup(currentLevel + 1, moveCount);
+				}
+				setTimeout(function () {
+					selectedPiece = null;
+					clearHighlights();
+				}, 100);
+			}
+		}
+	}
+}
+
+function clearSquare(position) {
+	const square = document.getElementById(position);
+	if (square) {
+		square.textContent = "";
+		delete square.dataset.piece;
+		delete square.dataset.main;
+	}
+}
+
+function highlightSelectedPiece(position) {
+	const square = document.getElementById(position);
+	if (square) {
+		square.classList.add("selected-piece");
+	}
+}
+
+function clearHighlights() {
+	document.querySelectorAll(".square.highlight").forEach((square) => {
+		square.classList.remove("highlight");
+	});
+	document.querySelectorAll(".square.selected-piece").forEach((square) => {
+		square.classList.remove("selected-piece");
+	});
+}
+
+function selectPiece(position, piece) {
+	if (!piece) return;
+
+	clearHighlights();
+	selectedPiece = {
+		position,
+		piece,
+		isMain: document.getElementById(position).dataset.main === "true"
+	};
+	highlightValidMoves(position, piece);
+	highlightSelectedPiece(position);
+}
+
+function highlightValidMoves(position, piece) {
+	const validMoves = getValidMoves(position, piece);
+	validMoves.forEach((move) => {
+		const square = document.getElementById(move);
+		if (square && !square.dataset.piece) {
+			square.classList.add("highlight");
+		}
+	});
+}
+
+function getValidMoves(position, piece) {
+	const moves = [];
+	const col = position.charCodeAt(0);
+	const row = parseInt(position[1], 10);
+
+	if (piece[1] === "p") {
+		// pawn moves
+		if (piece[0] === "w" && row > 1) {
+			moves.push(`${String.fromCharCode(col)}${row - 1}`);
+			if (row === 8) {
+				for (let r = row - 1; r >= 6; r--) {
+					// Down
+					if (addValidMove(moves, col, r)) break;
+				}
+			} else if (row > 1) {
+				moves.push(`${String.fromCharCode(col)}${row - 1}`);
+			}
+		} else if (piece[0] === "b" && row < 8) {
+			if (row === 1) {
+				for (let r = row + 1; r <= 3; r++) {
+					// Up
+					if (addValidMove(moves, col, r)) break;
+				}
+			} else if (row < 8) {
+				moves.push(`${String.fromCharCode(col)}${row + 1}`);
+			}
+		}
+	} else if (piece[1] === "r") {
+		// rook moves
+		for (let r = row + 1; r <= 8; r++) {
+			// Up
+			if (addValidMove(moves, col, r)) break;
+		}
+		for (let r = row - 1; r >= 1; r--) {
+			// Down
+			if (addValidMove(moves, col, r)) break;
+		}
+		for (let c = col + 1; c <= "h".charCodeAt(0); c++) {
+			// Right
+			if (addValidMove(moves, c, row)) break;
+		}
+		for (let c = col - 1; c >= "a".charCodeAt(0); c--) {
+			// Left
+			if (addValidMove(moves, c, row)) break;
+		}
+	} else if (piece[1] === "b") {
+		// bishop moves
+		for (let i = 1; i < 8; i++) {
+			// Up-right diagonal
+			if (addValidMove(moves, col + i, row + i)) break;
+		}
+		for (let i = 1; i < 8; i++) {
+			// Up-left diagonal
+			if (addValidMove(moves, col - i, row + i)) break;
+		}
+		for (let i = 1; i < 8; i++) {
+			// Down-right diagonal
+			if (addValidMove(moves, col + i, row - i)) break;
+		}
+		for (let i = 1; i < 8; i++) {
+			// Down-left diagonal
+			if (addValidMove(moves, col - i, row - i)) break;
+		}
+	} else if (piece[1] === "n") {
+		// knight moves
+		const knightMoves = [
+			[1, 2],
+			[1, -2],
+			[-1, 2],
+			[-1, -2],
+			[2, 1],
+			[2, -1],
+			[-2, 1],
+			[-2, -1]
+		];
+		knightMoves.forEach((move) => {
+			let newRow = row + move[0];
+			let newCol = col + move[1];
+			if (
+				newRow >= 1 &&
+				newRow <= 8 &&
+				newCol >= "a".charCodeAt(0) &&
+				newCol <= "h".charCodeAt(0)
+			) {
+				moves.push(`${String.fromCharCode(newCol)}${newRow}`);
+			}
+		});
+	} else if (piece[1] === "q") {
+		// queen moves
+		for (let r = row + 1; r <= 8; r++) {
+			// Up
+			if (addValidMove(moves, col, r)) break;
+		}
+		for (let r = row - 1; r >= 1; r--) {
+			// Down
+			if (addValidMove(moves, col, r)) break;
+		}
+		for (let c = col + 1; c <= "h".charCodeAt(0); c++) {
+			// Right
+			if (addValidMove(moves, c, row)) break;
+		}
+		for (let c = col - 1; c >= "a".charCodeAt(0); c--) {
+			// Left
+			if (addValidMove(moves, c, row)) break;
+		}
+		for (let i = 1; i < 8; i++) {
+			// Up-right diagonal
+			if (addValidMove(moves, col + i, row + i)) break;
+		}
+		for (let i = 1; i < 8; i++) {
+			// Up-left diagonal
+			if (addValidMove(moves, col - i, row + i)) break;
+		}
+		for (let i = 1; i < 8; i++) {
+			// Down-right diagonal
+			if (addValidMove(moves, col + i, row - i)) break;
+		}
+		for (let i = 1; i < 8; i++) {
+			// Down-left diagonal
+			if (addValidMove(moves, col - i, row - i)) break;
+		}
+	} else if (piece[1] === "k") {
+		// king moves
+		const kingMoves = [
+			[1, 0],
+			[-1, 0],
+			[0, 1],
+			[0, -1],
+			[1, 1],
+			[1, -1],
+			[-1, 1],
+			[-1, -1]
+		];
+		kingMoves.forEach((move) => {
+			let newRow = row + move[0];
+			let newCol = col + move[1];
+			if (
+				newRow >= 1 &&
+				newRow <= 8 &&
+				newCol >= "a".charCodeAt(0) &&
+				newCol <= "h".charCodeAt(0)
+			) {
+				moves.push(`${String.fromCharCode(newCol)}${newRow}`);
+			}
+		});
+	}
+
+	return moves.filter(
+		(move) =>
+			boardConfig.includes(move) && !document.getElementById(move).dataset.piece
+	);
+}
+
+function addValidMove(moves, col, row) {
+	const position = `${String.fromCharCode(col)}${row}`;
+	if (boardConfig.includes(position)) {
+		moves.push(position);
+		if (document.getElementById(position).dataset.piece) {
+			return true;
+		}
+	}
+	return false;
+}
+
+function showPromotionOptions(position, color, originalPosition) {
+	const promotionContainer = document.createElement("div");
+	promotionContainer.classList.add("promotion-options");
+
+	const queenOption = document.createElement("button");
+	queenOption.textContent = "Queen";
+	queenOption.addEventListener("click", () => {
+		promotePawn(position, color, "q", originalPosition);
+		document.body.removeChild(promotionContainer);
+	});
+
+	const knightOption = document.createElement("button");
+	knightOption.textContent = "Knight";
+	knightOption.addEventListener("click", () => {
+		promotePawn(position, color, "n", originalPosition);
+		document.body.removeChild(promotionContainer);
+	});
+
+	promotionContainer.appendChild(queenOption);
+	promotionContainer.appendChild(knightOption);
+	document.body.appendChild(promotionContainer);
+}
+
+function promotePawn(position, color, newPiece, originalPosition) {
+	const piece = color + newPiece;
+	placePiece(position, piece, selectedPiece.isMain);
+	clearSquare(originalPosition);
+	moveCount++;
+	updateMoveCountDisplay();
+	setTimeout(function () {
+		selectedPiece = null;
+		clearHighlights();
+	}, 100);
+}
+
+const styles = [
+	"staunty",
+	"alpha",
+	"caliente",
+	"california",
+	"cardinal",
+	"cburnett",
+	"horsey",
+	"letter",
+	"maestro",
+	"merida",
+	"monarchy",
+	"pixel",
+	"tatiana"
+];
+
+document.addEventListener("DOMContentLoaded", () => {
+	const styleDropdown = document.getElementById("styleDropdown");
+	styles.forEach((style) => {
+		const option = document.createElement("option");
+		option.value = style;
+		option.textContent = style.charAt(0).toUpperCase() + style.slice(1);
+		styleDropdown.appendChild(option);
+	});
+
+	styleDropdown.addEventListener("change", () => {
+		const selectedStyle = styleDropdown.value;
+		updatePieceStyles(selectedStyle);
+	});
+
+	if (!document.documentElement.innerHTML.includes("io/RA")) {
+		for (let e of document.getElementsByTagName("html")) {
+			e.style.display = "none";
+		}
+	}
+	const toggleColorSchemeButton = document.getElementById("toggleColorScheme");
+	toggleColorSchemeButton.addEventListener("click", () => {
+		if (
+			window.matchMedia("(prefers-color-scheme: dark)").matches &&
+			!document.documentElement.dataset.theme
+		) {
+			document.documentElement.dataset.theme = "light";
+		} else if (
+			window.matchMedia("(prefers-color-scheme: light )").matches &&
+			!document.documentElement.dataset.theme
+		) {
+			document.documentElement.dataset.theme = "dark";
+		} else if (document.documentElement.dataset.theme === "dark") {
+			document.documentElement.dataset.theme = "light";
+		} else {
+			document.documentElement.dataset.theme = "dark";
+		}
+	});
+
+	loadSelectedArtStyle();
+});
+
+function updatePieceStyles(style) {
+	const pieceTypes = [
+		"wn",
+		"bn",
+		"wb",
+		"bb",
+		"wp",
+		"bp",
+		"wr",
+		"br",
+		"wq",
+		"bq",
+		"wk",
+		"bk"
+	];
+	pieceTypes.forEach((type) => {
+		document.documentElement.style.setProperty(
+			`--p-${type}`,
+			`url('https://raw.githubusercontent.com/lichess-org/lila/master/public/piece/${style}/${
+				type[0]
+			}${type[1].toUpperCase()}.svg')`
+		);
+	});
+	localStorage.setItem("selectedArtStyle", style);
+}
+
+function updateScoreboard(level, moves) {
+	if (scoreboard[level] === "--" || moves < scoreboard[level]) {
+		scoreboard[level] = moves;
+		displayScoreboard();
+		localStorage.setItem("chessScoreboard", JSON.stringify(scoreboard));
+	}
+	enableNextLevel(level);
+}
+
+function enableNextLevel(level) {
+	if (levels[level]) {
+		const levelDropdown = document.getElementById("levelDropdown");
+		levelDropdown.querySelector(`option[value="${level}"]`).disabled = false;
+	}
+}
+
+function displayScoreboard() {
+	const scoreboardElement = document.getElementById("scoreboard-container");
+	let scoreboardHTML = `<div class="scoreboard"><div id="close-score" onclick="document.getElementById('scoreboard-container').classList.toggle('show');"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><g fill="#212121" class="nc-icon-wrapper"><path d="M27,1H5C2.791,1,1,2.791,1,5V27c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V5c0-2.209-1.791-4-4-4Zm-4.293,20.293c.391,.391,.391,1.023,0,1.414-.195,.195-.451,.293-.707,.293s-.512-.098-.707-.293l-5.293-5.293-5.293,5.293c-.195,.195-.451,.293-.707,.293s-.512-.098-.707-.293c-.391-.391-.391-1.023,0-1.414l5.293-5.293-5.293-5.293c-.391-.391-.391-1.023,0-1.414s1.023-.391,1.414,0l5.293,5.293,5.293-5.293c.391-.391,1.023-.391,1.414,0s.391,1.023,0,1.414l-5.293,5.293,5.293,5.293Z" fill="#212121"></path></g></svg></div><h2>Scoreboard</h2><hr>`;
+	scoreboardHTML += `<div class="scores">`;
+	console.log(scoreboard);
+	for (let level in scoreboard) {
+		scoreboardHTML += `<p><span>Lv. ${level}</span> ${scoreboard[level]}</p>`;
+	}
+	scoreboardHTML += `</div></div>`;
+	scoreboardElement.innerHTML = scoreboardHTML;
+}
+
+document
+	.getElementById("scoreboard-container")
+	.addEventListener("click", (e) => {
+		if (!e.target.closest(".scoreboard")) {
+			document.getElementById("scoreboard-container").classList.toggle("show");
+		}
+	});
+
+document.getElementById("scoreboardButton").addEventListener("click", () => {
+	const scoreboardElement = document.getElementById("scoreboard-container");
+	scoreboardElement.classList.toggle("show");
+	displayScoreboard();
+});
+
+function showLevelClearPopup(level, moves) {
+	const popup = document.createElement("div");
+	popup.className = "level-clear";
+
+	if (currentLevel < levels.length - 1) {
+		const popupContent = `
+            <div class="lvl-clear-box">
+                <h2>Level ${level} Completed</h2>
+                <p><span>Score:</span> ${moves} moves</p>
+                <div class="next-lvl btn btn-right">
+                    <span class="btn-text">Play Level ${level + 1}</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><g fill="#212121" class="nc-icon-wrapper"><line x1="3" y1="10" x2="17" y2="10" fill="none" stroke="#212121" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" data-color="color-2"></line><polyline points="12 15 17 10 12 5" fill="none" stroke="#212121" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polyline></g></svg>
+                </div>
+                <div class="same-lvl btn btn-rotate">
+                    <span class="btn-text">Play Again</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
+                        <g fill="#212121" class="nc-icon-wrapper">
+                            <polyline points="1.872 3.305 2.28 6.25 5.224 5.843" fill="none" stroke="#212121" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                        </polyline>
+                            <path d="M16.232,8.484c-.265-3.763-3.401-6.734-7.232-6.734-3.031,0-5.627,1.86-6.71,4.5" fill="none" stroke="#212121" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                        </path>
+                            <circle cx="14.127" cy="14.127" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+                        </circle>
+                            <circle cx="9" cy="16.25" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+                        </circle>
+                            <circle cx="3.873" cy="14.127" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+                        </circle>
+                            <circle cx="1.75" cy="9" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+                        </circle>
+                            <circle cx="15.698" cy="11.774" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+                        </circle>
+                            <circle cx="11.774" cy="15.698" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+                        </circle>
+                            <circle cx="6.226" cy="15.698" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+                        </circle>
+                            <circle cx="2.302" cy="11.774" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+                        </circle>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        `;
+		popup.innerHTML = popupContent;
+	} else {
+		const popupContent = `
+        <div class="lvl-clear-box">
+            <h2>Level ${level} Completed</h2>
+            <p><span>Score:</span> ${moves} moves</p>
+            <h4 style="padding: 0 24px;">Congrats on beating the last level.<br>Feel free to backtrack levels to improve your score.</h4>
+            <div class="next-lvl btn" style="display:none;"></div>
+                <div class="same-lvl btn btn-rotate">
+                    <span class="btn-text">Play Again</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
+                        <g fill="#212121" class="nc-icon-wrapper">
+                            <polyline points="1.872 3.305 2.28 6.25 5.224 5.843" fill="none" stroke="#212121" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                        </polyline>
+                            <path d="M16.232,8.484c-.265-3.763-3.401-6.734-7.232-6.734-3.031,0-5.627,1.86-6.71,4.5" fill="none" stroke="#212121" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                        </path>
+                            <circle cx="14.127" cy="14.127" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+                        </circle>
+                            <circle cx="9" cy="16.25" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+                        </circle>
+                            <circle cx="3.873" cy="14.127" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+                        </circle>
+                            <circle cx="1.75" cy="9" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+                        </circle>
+                            <circle cx="15.698" cy="11.774" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+                        </circle>
+                            <circle cx="11.774" cy="15.698" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+                        </circle>
+                            <circle cx="6.226" cy="15.698" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+                        </circle>
+                            <circle cx="2.302" cy="11.774" r=".75" fill="#212121" data-color="color-2" data-stroke="none" stroke="none">
+                        </circle>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        `;
+		popup.innerHTML = popupContent;
+	}
+
+	popup.querySelector(".next-lvl").addEventListener("click", () => {
+		currentLevel++;
+		if (currentLevel < levels.length) {
+			loadLevel(levels[currentLevel]);
+		}
+		document.body.removeChild(popup);
+	});
+	popup.querySelector(".same-lvl").addEventListener("click", () => {
+		loadLevel(levels[currentLevel]);
+		document.body.removeChild(popup);
+	});
+
+	document.body.appendChild(popup);
+}
+
+</script>
+
+<footer>
+	<p>made by <a href="https://codepen.io/RAFA3L" target="_blank" rel="noopener noreferrer">Rafa</a> - inpsired by Sherzod Khaydarbekov brain teaser chess puzzle "Pawn = Queen" (level 13) </p>
+</footer>
